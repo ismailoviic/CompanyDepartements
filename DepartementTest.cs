@@ -10,14 +10,12 @@ namespace DepartementsTests
     public class DepartementTest : IClassFixture<DepartementsFixture>
     {
         private readonly DepartementsFixture _departementsFixture;
-        private readonly ITestOutputHelper _output;
 
         public readonly List<Recru> NewRecrus;
 
-        public DepartementTest(DepartementsFixture departementsFixture, ITestOutputHelper output)
+        public DepartementTest(DepartementsFixture departementsFixture)
         {
             _departementsFixture = departementsFixture;
-            _output = output;
             NewRecrus = new List<Recru>()
             { new Recru("Ismail", 22, "Ismail@alphorm.com", Position.Back, DepartementsType.Dev),
                 new Recru("Ismailovic", 22, "Ismail@alphorm.com", Position.Back, DepartementsType.Dev),
@@ -33,71 +31,71 @@ namespace DepartementsTests
         [Fact]
         public void Affect1Recru()
         {
-            List<Recru> ListRecrus = new List<Recru>();
-            _output.WriteLine("Test Works ");
+            var ListRecrus = new List<Recru>();
             var Ismail = new Recru("Ismail", 22, "Ismail@alphorm.com", Position.Back, DepartementsType.Dev);
             _departementsFixture.Departement.Affect(ListRecrus, Ismail);
             Assert.NotEmpty(ListRecrus);
-            Assert.Equal("Ismail", _departementsFixture.Departement.GetRecruByName(ListRecrus, "Ismail").Name);
+            var sut = _departementsFixture.Departement.GetRecruByName(ListRecrus, "Ismail").Name;
+            Assert.Equal("Ismail", sut);
         }
 
 
         [Fact]
         public void AffectListRecrus()
         {
-            List<Recru> ListRecrus = new List<Recru>();
-            _output.WriteLine("Test Works ");
+            var ListRecrus = new List<Recru>();
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             Assert.NotEmpty(ListRecrus);
             Assert.Equal(NewRecrus.Count, ListRecrus.Count);
-            Assert.Equal("Yassine", _departementsFixture.Departement.GetRecruByName(ListRecrus, "Yassine").Name);
+            var sut = _departementsFixture.Departement.GetRecruByName(ListRecrus, "Yassine").Name;
+            Assert.Equal("Yassine", sut);
         }
         [Fact]
         public void DeleteRecruFromDev()
         {
-            List<Recru> ListRecrus = new List<Recru>();
-            _output.WriteLine("Test Works ");
-            Assert.Empty(ListRecrus);
+            var ListRecrus = new List<Recru>();
             var Ismail = new Recru("Ismail", 22, "Ismail@alphorm.com", Position.Back, DepartementsType.Dev);
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             _departementsFixture.Departement.DeleteRecrus(ListRecrus, Ismail);
-            Assert.False(_departementsFixture.Departement.DepartementContainsRecru(ListRecrus, Ismail.Name));
+            var sut = _departementsFixture.Departement.DepartementContainsRecru(ListRecrus, Ismail.Name);
+            Assert.False(sut);
         }
         [Fact]
         public void DeleteManyRecrusFromDev()
         {
-            List<Recru> ListRecrus = new List<Recru>();
-            Assert.Empty(ListRecrus);
+            var ListRecrus = new List<Recru>();
             var IsmailManal = new List<Recru>() {
                 new Recru("Ismail", 22, "Ismail@alphorm.com", Position.Back, DepartementsType.Dev),
                 new Recru("Manal", 23, "Manal@alphorm.com", Position.Front, DepartementsType.Dev) };
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             _departementsFixture.Departement.DeleteRecrus(ListRecrus, IsmailManal);
-            Assert.False(_departementsFixture.Departement.DepartementContainsRecru(ListRecrus, "Manal"));
-            Assert.True(_departementsFixture.Departement.DepartementContainsRecru(ListRecrus, "Yassine"));
+            var sut = _departementsFixture.Departement.DepartementContainsRecru(ListRecrus, "Manal");
+            Assert.False(sut);
+            sut = _departementsFixture.Departement.DepartementContainsRecru(ListRecrus, "Yassine");
+            Assert.True(sut);
         }
 
         [Fact]
         public void SearchTakesName()
         {
-            List<Recru> ListRecrus = new List<Recru>();
+            var ListRecrus = new List<Recru>();
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             var searchResult = _departementsFixture.Departement.Search(ListRecrus, "isma");
             var recrusNamedIsma = NewRecrus.Where(recru => recru.Name.Contains("isma")).ToList();
             Assert.Equal(recrusNamedIsma.Count, searchResult.Count);
         }
         [Fact]
-        public void SearchTakesNullReturnsNull()
+        public void SearchTakesNullReturnsEmpty()
         {
-            List<Recru> ListRecrus = new List<Recru>();
+            var ListRecrus = new List<Recru>();
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             var searchResult = _departementsFixture.Departement.Search(ListRecrus, null);
-            Assert.Null(searchResult);
+            Assert.Empty(searchResult);
         }
         [Fact]
         public void SearchTakesEmptyReturnsEmpty()
         {
-            List<Recru> ListRecrus = new List<Recru>();
+            var ListRecrus = new List<Recru>();
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             var searchResult = _departementsFixture.Departement.Search(ListRecrus, "");
             Assert.Empty(searchResult);
@@ -105,7 +103,7 @@ namespace DepartementsTests
         [Fact]
         public void SearchTakesInvalidString()
         {
-            List<Recru> ListRecrus = new List<Recru>();
+            var ListRecrus = new List<Recru>();
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             var searchResult = _departementsFixture.Departement.Search(ListRecrus, "ff15");
             Assert.Empty(searchResult);
@@ -113,16 +111,18 @@ namespace DepartementsTests
         [Fact]
         public void SearchTakesDepartement()
         {
-            List<Recru> ListRecrus = new List<Recru>();
+            var ListRecrus = new List<Recru>();
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             var searchResult = _departementsFixture.Departement.Search(ListRecrus, "Dev");
             var recrusInDev = NewRecrus.Where(recru => recru.Departements == DepartementsType.Dev).ToList();
             Assert.Equal(recrusInDev.Count, searchResult.Count);
         }
+
         [Fact]
         public void SearchTakesEmail()
         {
-            List<Recru> ListRecrus = new List<Recru>();
+
+            var ListRecrus = new List<Recru>();
             _departementsFixture.Departement.Affect(ListRecrus, NewRecrus);
             var searchResult = _departementsFixture.Departement.Search(ListRecrus, "Ismail@");
             var recrusEmail = NewRecrus.Where(recru => recru.Email.Contains("Ismail@")).ToList();

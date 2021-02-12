@@ -21,12 +21,12 @@ namespace CompanyDepartements
 
         public List<Recru> Search(List<Recru> departements, string searchTerm)
         {
+
             List<Recru> result = new List<Recru>();
-            if (searchTerm == null) return null;
-            if (searchTerm == "") return result;
+            if (string.IsNullOrEmpty(searchTerm)) return result;
             if (searchTerm.Contains('@')) { return departements.Where(recru => recru.Email.Contains(searchTerm)).ToList(); }
             var departementString = new[] {
-                new { str = "Dev", dep = DepartementsType.Dev },
+                new {str= "Dev", dep = DepartementsType.Dev },
                 new {str= "Marketing",dep=DepartementsType.Marketing } ,
                 new {str= "Sales",dep=DepartementsType.Sales } ,
                 new {str= "Rh",dep=DepartementsType.Rh }
@@ -39,22 +39,5 @@ namespace CompanyDepartements
 
             return departements.Where(recru => recru.Name.Contains(searchTerm)).ToList();
         }
-    }
-    public enum Position
-    {
-        Chef,
-        SousChef,
-        Front,
-        Back,
-        Marketer,
-        Saler,
-        Rh
-    }
-    public enum DepartementsType
-    {
-        Dev,
-        Marketing,
-        Sales,
-        Rh
     }
 }
